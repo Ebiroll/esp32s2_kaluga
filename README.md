@@ -6,6 +6,8 @@ I was able to order one of 10 kaluga boards from Digikey on the 13/5, however I 
 
 ![mainbody](docs/_static/ESP32-S2-Kaluga_V1.0_mainbody.png)
 
+    1. Pay attention that Module may use OSPI mode. Thus, 33-37 can not be used as other function.
+    2. If psram was soldered, GPIO26 will be used as CS, which can't be used as other functions
 
 # JTAG debugging
 I assume these instructions will help.
