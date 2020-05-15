@@ -6,23 +6,27 @@ This project shows that jpeg pictures are decoded and cached in memory, and a si
 
 ### 1.1 Hardware preparation
 
+![mainbody](../../docs/_static/ESP32-S2-Kaluga_V1.0_mainbody.png)
+
 <table>
     <tr>
-        <td> <img src = "../../ docs / _static / ESP32-S2-Kaluga_V1.0_mainbody.png" width = "300"> <p align = center> ESP32-S2-Kaluga-1 development board < / p> </ td>
-        <td> <img src = "../../ docs / _static / ESP-LyraP-LCD32_V1.0.png" width = "300"> <p align = center> ESP-LyraP-LCD32 display </ p > </ td>
+        <td> <img src = "../../docs/_static/ESP32-S2-Kaluga_V1.0_mainbody.png" width = "300"> <p align = center> ESP32-S2-Kaluga-1 development board < / p> </ td>
+        <td> 
+        <img src="../../docs/_static/ESP-LyraP-LCD32_V1.0.png" width = "300"> <p align = center> ESP-LyraP-LCD32 display </ p > </ td>
     </ tr>
 </ table>
+
 
 ### 1.2 Hardware connection
 
 1. Turn on all the DIP switches of SW3 and SW4, that is, the two groups of DIP switches in the lower left corner of the motherboard, as shown below:
 * Advanced: If you want to use some touchpad GPIO pins, just turn off the related DIP switch of the touchpad, please refer to the schematic diagram of the motherboard and touchpad for details.
   
-<div align = "left"> <img src = "../../ docs / _static / kaluga_examples_touch_1.jpg" width = "650" alt = "image 1-2" align = center /> </ div>
+<div align = "left"> <img src="../../docs/_static/kaluga_examples_touch_1.jpg" width = "650" alt = "image1-2" align = center /> </ div>
 
 2. Insert the display into the inner row of the double-row header on the motherboard, as shown below:
 
-<div align = "left"> <img src = "../../ docs / _static / kaluga_examples_lcd_1.jpg" width = "650" alt = "image 1-2" align = center /> </ div>
+<div align = "left"> <img src = "../../docs/_static/kaluga_examples_lcd_1.jpg" width = "650" alt = "image1-2" align = center /> </ div>
 
 * ESP32_S2_kaluga-1_v1.1 LCD pin assignment
 
@@ -63,7 +67,7 @@ When the program is burned in, you will see the following scene, then the burn i
 
 You can also see the following output log on the serial monitor:
 
-`` `
+```
 I (49) boot: ESP-IDF v4.2-dev-1097-g2e14149bf 2nd stage bootloader
 I (49) boot: compile time 19:19:55
 I (49) boot: chip revision: 0
@@ -113,7 +117,7 @@ I (737) LCD: LCD ID: 00290000
 I (737) LCD: ST7789V detected.
 I (737) LCD: kconfig: force CONFIG_LCD_TYPE_ST7789V.
 I (737) LCD: ST7789V initialization.
-`` `
+```
 
 ### 1.6 Troubleshooting
 
