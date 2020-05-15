@@ -2,7 +2,8 @@
 My exepriences with the esp32s2 kaluga dev board
 
 # Mystery box
-I was able to order one of 10 kaluga boards from Digikey on the 13/5, however I could not find much documentation about what I had actually ordered. Hovever I did find the schematics located here. https://github.com/espressif/esp-dev-kits/tree/master/esp32-s2-kaluga-1/docs It seems like we have an FT2232HL on board. Also I expect the LCD to be in the box. 
+I was able to order one of 10 kaluga boards from Digikey on the 13/5, however I could not find much documentation about what I had actually ordered. Hovever I did find the schematics located here. https://github.com/espressif/esp-dev-kits/tree/master/esp32-s2-kaluga-1/docs It seems like we have an FT2232HL on board. Also I expect the LCD to be in the box. Actually it has arrived 15/5 and it contained the ESP32-S2-WROVER module. The touch board, and camera was also included. Nice.
+
 
 ![mainbody](docs/_static/ESP32-S2-Kaluga_V1.0_mainbody.png)
 
@@ -59,8 +60,13 @@ It does not seem like that so we, have to create the configuration file ourselfs
 </table>
 
 # esp32s2-wroom
-I assume this is the one on the board. Nice to have 4MB of ram.
+This one was not mounted on my board.
 https://www.espressif.com/sites/default/files/documentation/esp32-s2-wroom_esp32-s2-wroom-i_datasheet_en.pdf
+
+# esp32s2-wroom
+This was found on my board. 4MB of flash and 2MB of PSRAM.
+https://www.espressif.com/sites/default/files/documentation/esp32-s2-wrover_esp32-s2-wrover-i_datasheet_en.pdf
+
 
 # esp32 technical reference.
 https://www.espressif.com/sites/default/files/documentation/esp32-s2_technical_reference_manual_en.pdf
