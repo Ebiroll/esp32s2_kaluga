@@ -15,9 +15,83 @@ It does not seem like that so we, have to create the configuration file ourselfs
 
 ![jtag](img/jtag_schematics.png)
 
+
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 59%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>ESP32-S2 Pin</p></th>
+<th class="head"><p>JTAG Signal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>CHIP_PU</p></td>
+<td><p>TRST_N</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>MTDO / GPIO40</p></td>
+<td><p>TDO</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>MTDI / GPIO41</p></td>
+<td><p>TDI</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>MTCK / GPIO39</p></td>
+<td><p>TCK</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>MTMS / GPIO42</p></td>
+<td><p>TMS</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+</tr>
+</tbody>
+</table>
+
 # esp32s2-wroom
 I assume this is the one on the board. Nice to have 4MB of ram.
 https://www.espressif.com/sites/default/files/documentation/esp32-s2-wroom_esp32-s2-wroom-i_datasheet_en.pdf
 
 # esp32 technical reference.
 https://www.espressif.com/sites/default/files/documentation/esp32-s2_technical_reference_manual_en.pdf
+
+# USB
+Pins are broken out on the board, but an USB connector would have been nice.
+The ESP32-S2 chip needs to be in bootloader mode for the detection as a DFU device and flashing.
+
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>GPIO</p></th>
+<th class="head"><p>USB</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>D- (green)</p></td>
+</tr>
+<tr class="row-odd"><td><p>19</p></td>
+<td><p>D+ (white)</p></td>
+</tr>
+<tr class="row-even"><td><p>GND</p></td>
+<td><p>GND (black)</p></td>
+</tr>
+<tr class="row-odd"><td><p>+5V</p></td>
+<td><p>+5V (red)</p></td>
+</tr>
+</tbody>
+</table>
+
+
+https://electronics.stackexchange.com/questions/73295/in-a-usb-cable-is-it-ok-to-swap-the-d-and-d-wires/73297#73297
