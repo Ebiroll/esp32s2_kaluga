@@ -2,7 +2,7 @@
 My exepriences with the esp32s2 kaluga dev board
 
 # Mystery box
-I was able to order one of 10 kaluga boards from Digikey on the 13/5, however I could not find much documentation about what I had actually ordered. Hovever I did find the schematics located here. https://github.com/espressif/esp-dev-kits/tree/master/esp32-s2-kaluga-1/docs It seems like we have an FT2232HL on board. Also I expect the LCD to be in the box. Actually it has arrived 15/5 and it contained the ESP32-S2-WROVER module. The touch board, and camera was also included. Nice.
+I was able to order one of 10 kaluga boards from Digikey on the 13/5-2020. I could not find much documentation about what I had actually ordered, however I did find the schematics located here. https://github.com/espressif/esp-dev-kits/tree/master/esp32-s2-kaluga-1/docs It seems like we have an FT2232HL on board. Also I expect the LCD to be in the box. Actually it has arrived 15/5 and it contained the ESP32-S2-WROVER module. The touch board, and camera was also included. Nice.
 
 
 ![mainbody](docs/_static/ESP32-S2-Kaluga_V1.0_mainbody.png)
@@ -63,7 +63,7 @@ It does not seem like that so we, have to create the configuration file ourselfs
 This one was not mounted on my board.
 https://www.espressif.com/sites/default/files/documentation/esp32-s2-wroom_esp32-s2-wroom-i_datasheet_en.pdf
 
-# esp32s2-wroom
+# esp32s2-wrover
 This was found on my board. 4MB of flash and 2MB of PSRAM.
 https://www.espressif.com/sites/default/files/documentation/esp32-s2-wrover_esp32-s2-wrover-i_datasheet_en.pdf
 
@@ -73,7 +73,7 @@ https://www.espressif.com/sites/default/files/documentation/esp32-s2_technical_r
 
 # USB
 Pins are broken out on the board, but an USB connector would have been nice.
-The ESP32-S2 chip needs to be in bootloader mode for the detection as a DFU device and flashing.
+The ESP32-S2 chip needs to be in bootloader mode for the detection as a DFU device and flashing. I find that 5V is on the opposite side on PIN 19 & 20. Now this is inonvenient. Mhy did they not put an USB OTG connector on the board?
 
 <table class="docutils align-default">
 <colgroup>
