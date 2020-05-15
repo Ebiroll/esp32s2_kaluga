@@ -12,3 +12,9 @@ It does not seem like that so we, have to create the configuration file ourselfs
 
 ![jtag](img/jtag_schematics.png)
 
+# esp32s2-wroom
+I assume this is the one on the board. Nice to have 4MB of ram.
+https://www.espressif.com/sites/default/files/documentation/esp32-s2-wroom_esp32-s2-wroom-i_datasheet_en.pdf
+
+# esp32 technical reference.
+https://www.espressif.com/sites/default/files/documentation/esp32-s2_technical_reference_manual_en.pdf
