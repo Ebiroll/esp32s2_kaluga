@@ -16,13 +16,24 @@
 #include "soc/sens_periph.h"
 #include "driver/rmt.h"
 #include "led_strip.h"
-
+//#include "esp32s2/rom/ets_sys.h"
 
 #define RMT_TX_CHANNEL RMT_CHANNEL_0
 #define LEDC_COLOR 200        /*!< Initializes the led light value （0～255）*/
 #define LEDC_RANGE 10         /*!< Light adjustment amplitude */
 
 static const char *TAG = "Led test";
+
+// Non working Workaround for Jtag problem
+//typedef uint32_t (*tROMFUNCTION)( void ) ;
+//tROMFUNCTION rom_cpu_freq=(tROMFUNCTION)0x4000d8b0;
+// (gdb) x/10i 0x4000d8b0
+//   uint32_t ets_get_cpu_frequency(void);
+//   0x4000d8b0:  entry   a1, 32
+//   0x4000d8b3:  l32r    a8, 0x4000d884
+//   0x4000d8b6:  l32i.n  a2, a8, 0
+//   0x4000d8b8:  retw.n
+//   0x4000d8ba:  .byte 00
 
 
 typedef enum {
@@ -80,12 +91,15 @@ static void led_task(void *pvParameter)
     uint8_t red   = 0;
     uint8_t green = 0;
     uint8_t blue  = 0;
-
+    //int test=rom_cpu_freq();
+    //printf("Cpu freq =%d\n",test);
+    
     /*!< Wait touch sensor init done */
     for (;;) {
+        //test=rom_cpu_freq();
         vTaskDelay(100 / portTICK_RATE_MS);
         {
-            ESP_ERROR_CHECK(strip->set_pixel(strip, 0, LEDC_COLOR, 0, 0));
+	    //ESP_ERROR_CHECK(strip->set_pixel(strip, 0, LEDC_COLOR, 0, 0));
             red   = LEDC_COLOR;
             green = 0;
             blue  = 0;
@@ -94,7 +108,7 @@ static void led_task(void *pvParameter)
         }
         vTaskDelay(1000 / portTICK_RATE_MS);
         {
-            ESP_ERROR_CHECK(strip->set_pixel(strip, 0, 0, LEDC_COLOR, 0));
+	    //ESP_ERROR_CHECK(strip->set_pixel(strip, 0, 0, LEDC_COLOR, 0));
             red   = 0;
             green = LEDC_COLOR;
             blue  = 0;
@@ -103,10 +117,19 @@ static void led_task(void *pvParameter)
         }
         vTaskDelay(1000 / portTICK_RATE_MS);
         {
-            ESP_ERROR_CHECK(strip->set_pixel(strip, 0, 0, 0, LEDC_COLOR));
+	    //ESP_ERROR_CHECK(strip->set_pixel(strip, 0, 0, 0, LEDC_COLOR));
             red   = 0;
             green = 0;
             blue  = LEDC_COLOR;
+            ESP_ERROR_CHECK(strip->set_pixel(strip, 0, red, green, blue));
+            ESP_ERROR_CHECK(strip->refresh(strip, 0));
+        }
+        vTaskDelay(1000 / portTICK_RATE_MS);
+	{
+	    //ESP_ERROR_CHECK(strip->set_pixel(strip, 0, 0, 0, LEDC_COLOR));
+            red   = LEDC_COLOR;
+            green = LEDC_COLOR;
+            blue  = 10;
             ESP_ERROR_CHECK(strip->set_pixel(strip, 0, red, green, blue));
             ESP_ERROR_CHECK(strip->refresh(strip, 0));
         }
@@ -118,6 +141,7 @@ static void led_task(void *pvParameter)
 
 void app_main(void)
 {
+  
     /*!< Initialize the WS2812 */
     ESP_ERROR_CHECK(example_rmt_init(CONFIG_EXAMPLE_RMT_TX_GPIO, CONFIG_EXAMPLE_STRIP_LED_NUMBER, RMT_CHANNEL_0));
     /*!< Initialize the touch pad */

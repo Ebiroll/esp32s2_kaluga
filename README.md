@@ -136,9 +136,12 @@ I (601) cam: cam_buffer_size: 51200, cam_dma_size: 3200, cam_dma_node_cnt: 16, c
 ```
 
 # Test openocd
-. ~/esp/esp-idf/export.sh
+     . ~/esp/esp-idf/export.sh
 I have prepared a bord config file in the openpcd dir
-openocd -f openocd/board/esp32-kaluga-1-3.3v.cfg
+```
+     openocd -f openocd/board/esp32-kaluga-1-3.3v.cfg
+```
+ Failed log
 ```
 Open On-Chip Debugger  v0.10.0-esp32-20200420 (2020-04-20-16:15)
 Licensed under GNU GPL v2
@@ -154,22 +157,60 @@ Error: Trying to use configured scan chain anyway...
 Error: esp32s2.cpu: IR capture error; saw 0x1f not 0x01
 Warn : Bypassing JTAG setup events due to errors
 Info : Listening on port 3333 for gdb connections
-```
-This indicates that I have not configured the switches yes.
-To attach to openocd,
-    xtensa-esp32s2-elf-gdb -b 115200 -ex 'target remote /dev/ttyUSB0'
 
+To get even more debug information, try
+openocd -l openocd_log.txt -d3 -f openocd/board/esp32-kaluga-1-3.3v.cfg
+```
+This indicates that I have not configured the switches yes. The switches are markd JTAG and must be put to ON position.
+To attach debugger to openocd,
+    xtensa-esp32s2-elf-gdb build/led.elf  -ex 'target remote:3333'
+
+
+# JTag startup commands
+https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/api-guides/jtag-debugging/index.html
+You can put these in .gdbinit or enterr manually
+    mon reset halt
+    flushregs
+    set remote hardware-watchpoint-limit 2
+    thb app_main
+    c
 # Compile the examples
-    idf.py set-target esp32s2 menuconfig
+    idf.py set-target esp32s2
     idf.py menuconfig
        Set use SPI-flash if you want to use 2MB of RAM
+       (→ Component config → ESP32S2-specific)
     idf.py build
+
+# Jtag debug results
+At first I was not able to set breakpoints in app_main
+```
+Continuing.
+Warning:
+Cannot insert breakpoint 1.
+Cannot access memory at address 0x40083354
+```
+But after some time, it started to work.
+```
+(gdb) b app_main
+Breakpoint 1 at 0x40083324: file ../main/main.c, line 143.
+(gdb) c
+Continuing.
+Note: automatically using hardware breakpoints for read-only addresses.
+esp32s2: Target halted, PC=0x40083324, debug_reason=00000001
+```
+
 
 
 # Save the flash to file
      esptool.py -p /dev/ttyUSB1 --chip esp32s2  --baud 115200 read_flash 0 0x400000  backup.bin
+     Why not? If you want to restore the factory installe flash
 
-# 
+# Use openOCD to flash app
+If you already have installe the bootloader and partion table you can flash only application with
+```
+openocd   -f  openocd/board/esp32-kaluga-1-3.3v.cfg  -c "program_esp examples/led/build/led.bin 0x10000 verify exit"
+```
+
 
 # esp32s2-wroom
 This one was not mounted on my board.

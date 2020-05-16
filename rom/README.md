@@ -61,8 +61,8 @@ a14            0x0      0
 a15            0xc0     192
 ```
 Note how the registers have shifted
-a0 contains the callers return adress.
-a1 has decreased with 32
+    a0 contains the callers return adress.
+    a1 has decreased with 32
 ```
     a10->a2
     a11->a3
@@ -78,7 +78,7 @@ a1 has decreased with 32
 
 If we display all the registers
     (gdb) info all-registers
-```
+
 pc             0x400128f3       0x400128f3 <uart_baudrate_detect+3>
 ar0            0x60080000       1611137024
 ar1            0x60080800       1611139072
