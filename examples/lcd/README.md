@@ -36,9 +36,9 @@ LCD PIN | MISO | MOSI | CLK | CS | D_C | RST | BCKL (BLCT) |
 
 ### 1.3 Configuration Engineering
 
-`` `
+```
 idf.py set-target esp32s2 menuconfig
-`` `
+```
 
 * Configure serial port related information under `Serial flasher config`.
 * Set `Example Configuration`->` LCD module type`: configure the display type.
@@ -48,9 +48,9 @@ idf.py set-target esp32s2 menuconfig
 
 Build the project and burn it into the board, then run the monitoring tool to view the serial output:
 
-`` `
+```
 idf.py -p PORT flash monitor
-`` `
+```
 
 * If there are two port numbers, the largest one is `PORT`.
 

@@ -156,7 +156,20 @@ Warn : Bypassing JTAG setup events due to errors
 Info : Listening on port 3333 for gdb connections
 ```
 This indicates that I have not configured the switches yes.
+To attach to openocd,
+    xtensa-esp32s2-elf-gdb -b 115200 -ex 'target remote /dev/ttyUSB0'
 
+# Compile the examples
+    idf.py set-target esp32s2 menuconfig
+    idf.py menuconfig
+       Set use SPI-flash if you want to use 2MB of RAM
+    idf.py build
+
+
+# Save the flash to file
+     esptool.py -p /dev/ttyUSB1 --chip esp32s2  --baud 115200 read_flash 0 0x400000  backup.bin
+
+# 
 
 # esp32s2-wroom
 This one was not mounted on my board.
