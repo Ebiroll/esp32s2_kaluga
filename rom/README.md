@@ -1,10 +1,20 @@
 # Dumping the ROM with gdb
-    (gdb) dump binary memory drom0.bin 0x3F400000 0x3F400000+4194304
-    (gdb) dump binary memory irom0.bin 0x40800000 0x40800000+4194304
+    (gdb) dump binary memory irom0.bin 0x40000000 131072
+No success
+
+# Dump with esptool
+    esptool.py --chip esp32s2 -p /dev/ttyUSB1 --baud 115200 dump_mem  0x40000000   131072   irom.bin
+
+
+# Split roms
+If you want two files
+    esptool.py --chip esp32s2 -p /dev/ttyUSB1 --baud 115200 dump_mem  0x40000000   65536   irom0.bin
+    esptool.py --chip esp32s2 -p /dev/ttyUSB1 --baud 115200 dump_mem  0x40010000   65536   irom1.bin
+
 
 # Save a copy of the flash
 
-    esptool.py -p /dev/ttyUSB1 --chip esp32s2  --baud 115200 read_flash 0 0x400000  backup.bin
+    esptool.py -p /dev/ttyUSB1 --chip esp32s2  --baud 115200    read_flash 0 0x400000  backup.bin
 
 
 # Winowed register call

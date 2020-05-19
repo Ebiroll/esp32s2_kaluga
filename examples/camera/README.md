@@ -52,9 +52,9 @@ CAMERA PIN | XCLK | PCLK | VSYNC | HSYNC | D2 | D3 | D4 | D5 | D6 | D7 | D8 | D9
 
 ### 1.3 Software Configuration
 
-`` `
+```
 idf.py set-target esp32s2 menuconfig
-`` `
+```
 
 * Configure serial port related information under `Serial flasher config`.
 * In `Example Configuration`->` kaluga version`: select the kaluga motherboard version.
@@ -65,9 +65,9 @@ idf.py set-target esp32s2 menuconfig
 
 Build the project and flash it into the board, then run the monitoring tool to view the serial output:
 
-`` `
+```
 idf.py -p PORT flash monitor
-`` `
+```
 
 * If there are two port numbers, the largest one is `PORT`. i.e. /dev/ttyUSB1
 
@@ -81,7 +81,7 @@ When the program is flashe, you will see the following scene, thefn the flash wa
 
 You can also see the following output log on the serial monitor:
 
-`` `
+```
  (60) boot.esp32s2: SPI Mode: QIO
 I (64) boot.esp32s2: SPI Flash Size: 4MB
 I (69) boot: Enabling RNG early entropy source ...
@@ -141,7 +141,7 @@ I (915) cam: frame1_buffer_en
 I (915) cam: frame2_buffer_en
 I (1015) main: camera init done
 
-`` `
+```
 
 ### 1.6 Troubleshooting
 
