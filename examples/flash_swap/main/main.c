@@ -73,13 +73,15 @@
 #include "bootloader_mem.h"
 
 extern void esp_clk_init();
-extern esp_perip_clk_init();
+extern void esp_perip_clk_init();
+//void start_cpu0() IRAM_ATTR __attribute__((noreturn));
+void start_cpu0_dummy();
 
 #define STRINGIFY(s) STRINGIFY2(s)
 #define STRINGIFY2(s) #s
 
-void start_cpu0(void) __attribute__((weak, alias("start_cpu0_default"))) __attribute__((noreturn));
-void start_cpu0_default(void) IRAM_ATTR __attribute__((noreturn));
+//void start_cpu0(void) __attribute__((weak, alias("start_cpu0_default"))) __attribute__((noreturn));
+//void start_cpu0(void) IRAM_ATTR __attribute__((noreturn));
 
 static void do_global_ctors(void);
 static void main_task(void *args);
@@ -96,6 +98,7 @@ extern void (*__init_array_end)(void);
 extern volatile int port_xSchedulerRunning[2];
 
 static const char *TAG = "cpu_start";
+#if 0
 
 struct object {
     long placeholder[ 10 ];
@@ -111,7 +114,7 @@ static bool s_spiram_okay = true;
  * and the app CPU is in reset. We do have a stack, so we can do the initialization in C.
  */
 
-void IRAM_ATTR call_start_cpu0(void)
+void IRAM_ATTR call_start_cpu0_dummy(void)
 {
     RESET_REASON rst_reas;
 
@@ -228,6 +231,7 @@ void IRAM_ATTR call_start_cpu0(void)
     start_cpu0();
 }
 
+#endif
 static void intr_matrix_clear(void)
 {
     //Clear all the interrupt matrix register
@@ -236,13 +240,14 @@ static void intr_matrix_clear(void)
     }
 }
 
-void start_cpu0_default(void)
+
+void start_cpu0(void)
 {
     esp_err_t err;
     esp_setup_syscall_table();
 
-    if (s_spiram_okay) {
 #if 0
+    if (s_spiram_okay) {
         esp_err_t r = esp_spiram_add_to_heapalloc();
         if (r != ESP_OK) {
             ESP_EARLY_LOGE(TAG, "External RAM could not be added to heap!");
@@ -258,8 +263,8 @@ void start_cpu0_default(void)
 #if CONFIG_SPIRAM_USE_MALLOC
         heap_caps_malloc_extmem_enable(CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL);
 #endif
-#endif
     }
+#endif
 
 //Enable trace memory and immediately start trace.
 #if CONFIG_ESP32S2_TRAX
@@ -425,7 +430,6 @@ static void main_task(void *args)
 }
 
 
-
 //#include "esp32s2/rom/ets_sys.h"
 
 //typedef uint32_t (*tROMFUNCTION)( void ) ;
@@ -440,8 +444,34 @@ static void main_task(void *args)
 //   0x4000d8ba:  .byte 00
 
 
+//typedef uint32_t (*tptrFUNCTION)( void ) __attribute__((noreturn)) ;
+//__attribute__((section(".rtc.data"))) uint32_t tptrFUNCTION enter_function ;
+__attribute__((section(".rtc.data"))) uint32_t start_fun;
 
+#define MMU_INVALID                     BIT(14)
+#define MMU_ACCESS_FLASH                BIT(15)
+#define MMU_ACCESS_SPIRAM               BIT(16)
+#define ESP32_CACHE_PAGE_SIZE           0x1000
 
+uint32_t tmp_page[ESP32_CACHE_PAGE_SIZE];
+
+void IRAM_ATTR flash_swap(void)
+{
+    for (int i=0;i<20;i++) { 
+        //uint32_t *inst_ptr;
+        uint32_t cahce_val=*(uint32_t *)(0x61801200+i*4);
+        //inst_ptr = (uint32_t *)(0x3f000000 + i * ESP32_CACHE_PAGE_SIZE);        
+        //memcpy(tmp_page,inst_ptr,0x1000);
+        printf("%d,%8X",i,cahce_val);
+        vTaskDelay(5);
+        cahce_val &= ~(MMU_ACCESS_FLASH);
+        cahce_val |= (MMU_ACCESS_SPIRAM);
+
+        //unsigned int_state = portENTER_CRITICAL_NESTED();
+        //*(uint32_t *)(0x61801200+i*4)=cahce_val;
+        //portEXIT_CRITICAL_NESTED(int_state);
+    }
+}
 
 
 #define MAX_ALLOCS 20
@@ -479,4 +509,9 @@ void app_main(void)
     
     test=esp_get_free_heap_size();
     printf("Free heap size %d\n",test);
+
+    vTaskDelay(100);
+
+    flash_swap();
+
 }
