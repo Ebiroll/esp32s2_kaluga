@@ -503,15 +503,15 @@ void IRAM_ATTR flash_swap(void)
 
     for (int i=0;i<256;i++) { 
         //uint32_t *inst_ptr;
-        uint32_t cahce_val=i; //*(uint32_t *)(0x61801200+i*4);
+        uint32_t cache_val=i; //*(uint32_t *)(0x61801200+i*4);
         //inst_ptr = (uint32_t *)(0x3f000000 + i * ESP32_CACHE_PAGE_SIZE);        
         //memcpy(tmp_page,inst_ptr,0x1000);
         //printf("%d,%8X ",i,cahce_val);
         //vTaskDelay(5);
-        cahce_val &= ~(MMU_ACCESS_FLASH);
-        cahce_val |= (MMU_ACCESS_SPIRAM);
+        cache_val &= ~(MMU_ACCESS_FLASH);
+        cache_val |= (MMU_ACCESS_SPIRAM);
         //if (i%8==7) {printf("\n");}
-        *(uint32_t *)(0x61801200+i*4)=cahce_val;
+        *(uint32_t *)(0x61801200+i*4)=cache_val;
     }
     stop();
     //portEXIT_CRITICAL_NESTED(int_state);
