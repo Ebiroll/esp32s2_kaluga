@@ -17,6 +17,8 @@
 #include "sdkconfig.h"
 #include "esp_attr.h"
 #include "esp_err.h"
+#include "soc/cache_memory.h"
+
 
 #include "esp32s2/rom/ets_sys.h"
 #include "esp32s2/rom/uart.h"
@@ -240,11 +242,48 @@ static void intr_matrix_clear(void)
     }
 }
 
+typedef enum {
+    ESP_SPIRAM_SIZE_16MBITS = 0,   /*!< SPI RAM size is 16 MBits */
+    ESP_SPIRAM_SIZE_32MBITS = 1,   /*!< SPI RAM size is 32 MBits */
+    ESP_SPIRAM_SIZE_64MBITS = 2,   /*!< SPI RAM size is 64 MBits */
+    ESP_SPIRAM_SIZE_INVALID,       /*!< SPI RAM size is invalid */
+} esp_spiram_size_t;
+
+
+#define SPIRAM_SIZE ESP_SPIRAM_SIZE_16MBITS
+
+static uint32_t pages_for_flash = 0;
+static uint32_t page0_mapped = 0;
+static uint32_t page0_page = INVALID_PHY_PAGE;
+
+
+esp_err_t esp_spiram_enable_instruction_access(void);
+
+esp_err_t esp_spiram_enable_instruction_access(void)
+{
+    uint32_t pages_in_flash = 0;
+    pages_in_flash += Cache_Count_Flash_Pages(PRO_CACHE_IBUS0, &page0_mapped);
+    pages_in_flash += Cache_Count_Flash_Pages(PRO_CACHE_IBUS1, &page0_mapped);
+    if ((pages_in_flash + pages_for_flash) > (SPIRAM_SIZE >> 16)) {
+        ESP_EARLY_LOGE(TAG, "SPI RAM space not enough for the instructions, has %d pages, need %d pages.", (SPIRAM_SIZE >> 16), (pages_in_flash + pages_for_flash));
+        return ESP_FAIL;
+    }
+    ESP_EARLY_LOGI(TAG, "Instructions copied and mapped to SPIRAM");
+    pages_for_flash = Cache_Flash_To_SPIRAM_Copy(PRO_CACHE_IBUS0, IRAM0_ADDRESS_LOW, pages_for_flash, &page0_page);
+    pages_for_flash = Cache_Flash_To_SPIRAM_Copy(PRO_CACHE_IBUS1, IRAM1_ADDRESS_LOW, pages_for_flash, &page0_page);
+    //instrcution_in_spiram = 1;
+    return ESP_OK;
+}
+
+
 
 void start_cpu0(void)
 {
     esp_err_t err;
     esp_setup_syscall_table();
+
+    esp_spiram_enable_instruction_access();
+
 
 #if 0
     if (s_spiram_okay) {
@@ -425,7 +464,7 @@ static void main_task(void *args)
     }
 #endif
 
-    //app_main();
+    app_main();
     vTaskDelete(NULL);
 }
 
@@ -455,22 +494,27 @@ __attribute__((section(".rtc.data"))) uint32_t start_fun;
 
 uint32_t tmp_page[ESP32_CACHE_PAGE_SIZE];
 
+void stop() {
+    while(true) {};
+}
 void IRAM_ATTR flash_swap(void)
 {
-    for (int i=0;i<20;i++) { 
+    //unsigned int_state = portENTER_CRITICAL_NESTED();
+
+    for (int i=0;i<256;i++) { 
         //uint32_t *inst_ptr;
-        uint32_t cahce_val=*(uint32_t *)(0x61801200+i*4);
+        uint32_t cahce_val=i; //*(uint32_t *)(0x61801200+i*4);
         //inst_ptr = (uint32_t *)(0x3f000000 + i * ESP32_CACHE_PAGE_SIZE);        
         //memcpy(tmp_page,inst_ptr,0x1000);
-        printf("%d,%8X",i,cahce_val);
-        vTaskDelay(5);
+        //printf("%d,%8X ",i,cahce_val);
+        //vTaskDelay(5);
         cahce_val &= ~(MMU_ACCESS_FLASH);
         cahce_val |= (MMU_ACCESS_SPIRAM);
-
-        //unsigned int_state = portENTER_CRITICAL_NESTED();
-        //*(uint32_t *)(0x61801200+i*4)=cahce_val;
-        //portEXIT_CRITICAL_NESTED(int_state);
+        //if (i%8==7) {printf("\n");}
+        *(uint32_t *)(0x61801200+i*4)=cahce_val;
     }
+    stop();
+    //portEXIT_CRITICAL_NESTED(int_state);
 }
 
 
