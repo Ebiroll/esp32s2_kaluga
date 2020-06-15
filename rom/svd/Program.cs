@@ -240,7 +240,7 @@ namespace ESP32S2_SVD_GEN
             //Chapter4.Add(new PerphDevice() { BaseAddress = 0x3FF44000, EndAddress = 0x3FF4_4FFF, Name = "GPIO", FilterPrefix = "GPIO" });
             // note, for rtcDevice in Chapter, apply prefix RTCIO 
             //Chapter4.Add(rtcDevice);
-            Chapter4.Add(new PerphDevice() { BaseAddress = 0x3F4C2000, EndAddress = 0x3F4C_3000, Name = "IO_MUX", FilterPrefix = "IOMUX" });
+            Chapter4.Add(new PerphDevice() { BaseAddress = 0x3F4C2000, EndAddress = 0x3F4C_3000, Name = "IO_MUX", FilterPrefix = "" });
 
             DeviceMap.Add("4", Chapter4);
 
@@ -253,7 +253,10 @@ namespace ESP32S2_SVD_GEN
             DeviceMap.Add("6", Chapter6);
 
             List<PerphDevice> Chapter8 = new List<PerphDevice>();
-            Chapter8.Add(new PerphDevice() { BaseAddress = 0x3F400000, EndAddress = 0x3F40_0100, Name = "UART", FilterPrefix = "UART" });
+            Chapter8.Add(new PerphDevice() { BaseAddress = 0x3F400000, EndAddress = 0x3F40_0FFF, Name = "UART0", FilterPrefix = "" });
+            Chapter8.Add(new PerphDevice() { BaseAddress = 0x60000000, EndAddress = 0x6000_0FFF, Name = "UART0_B", FilterPrefix = "" });            
+            Chapter8.Add(new PerphDevice() { BaseAddress = 0x3F410000, EndAddress = 0x3F41_0FFF, Name = "UART1", FilterPrefix = "" });
+
             DeviceMap.Add("8", Chapter8);
 
             List<PerphDevice> Chapter9 = new List<PerphDevice>();
@@ -274,33 +277,112 @@ namespace ESP32S2_SVD_GEN
 
             List<PerphDevice> Chapter15 = new List<PerphDevice>();
             Chapter15.Add(new PerphDevice() { BaseAddress = 0x3F423000, EndAddress = 0x3F42_3100, Name = "SYSTIMER", FilterPrefix = "" });
+            Chapter15.Add(new PerphDevice() { BaseAddress = 0x60023000, EndAddress = 0x6002_3100, Name = "SYSTIMER_B", FilterPrefix = "" });
             DeviceMap.Add("15", Chapter15);
 
 
-           List<PerphDevice> Chapter16 = new List<PerphDevice>();
-            Chapter15.Add(new PerphDevice() { BaseAddress = 0x3FC1A000, EndAddress = 0x3FC1_A000, Name = "EFUSE", FilterPrefix = "" });
-            DeviceMap.Add("16", Chapter15);
+            List<PerphDevice> Chapter16 = new List<PerphDevice>();
+            Chapter16.Add(new PerphDevice() { BaseAddress = 0x3FC1A000, EndAddress = 0x3FC1_A200, Name = "EFUSE", FilterPrefix = "" });
+            Chapter16.Add(new PerphDevice() { BaseAddress = 0x6001A000, EndAddress = 0x6001A200, Name = "EFUSE_B", FilterPrefix = "" });
+            DeviceMap.Add("16", Chapter16);
+
 
            List<PerphDevice> Chapter17 = new List<PerphDevice>();
             Chapter17.Add(new PerphDevice() { BaseAddress = 0x3F413000, EndAddress = 0x3F41_3100, Name = "I2C0", FilterPrefix = "" });
-            Chapter17.Add(new PerphDevice() { BaseAddress = 0x3F427000, EndAddress = 0x3F42_1000, Name = "I2C1", FilterPrefix = "" });
+            Chapter17.Add(new PerphDevice() { BaseAddress = 0x3F427000, EndAddress = 0x3F42_7100, Name = "I2C1", FilterPrefix = "" });
             DeviceMap.Add("17", Chapter17);
 
 
 
             List<PerphDevice> Chapter18 = new List<PerphDevice>();
-            Chapter18.Add(new PerphDevice() { BaseAddress = 0x3F423000, EndAddress = 0x3F42_3100, Name = "SYSTIMER", FilterPrefix = "SYSTIMER" });
+            Chapter18.Add(new PerphDevice() { BaseAddress = 0x3F423000, EndAddress = 0x3F42_3100, Name = "OTHER", FilterPrefix = "OTHER" });
             DeviceMap.Add("18", Chapter18);
-            DeviceMap.Add("19", Chapter18);
-            DeviceMap.Add("20", Chapter18);
-            DeviceMap.Add("21", Chapter18);
-            DeviceMap.Add("22", Chapter18);
-            DeviceMap.Add("24", Chapter18);
-            DeviceMap.Add("25", Chapter18);
-            DeviceMap.Add("26", Chapter18);
-            DeviceMap.Add("27", Chapter18);
-            DeviceMap.Add("28", Chapter18);
-            DeviceMap.Add("29", Chapter18);
+
+            List<PerphDevice> Chapter19 = new List<PerphDevice>();
+            Chapter19.Add(new PerphDevice() { BaseAddress = 0x3F43A000, EndAddress = 0x3F43_A100, Name = "AES", FilterPrefix = "" });
+            Chapter19.Add(new PerphDevice() { BaseAddress = 0x6003A000, EndAddress = 0x6003_A100, Name = "AES_B", FilterPrefix = "" });
+            DeviceMap.Add("19", Chapter19);
+
+            List<PerphDevice> Chapter20 = new List<PerphDevice>();
+            Chapter20.Add(new PerphDevice() { BaseAddress = 0x3F43B000, EndAddress = 0x3F43_B100, Name = "SHA", FilterPrefix = "" });
+            DeviceMap.Add("20", Chapter20);
+
+
+            List<PerphDevice> Chapter21 = new List<PerphDevice>();
+            Chapter21.Add(new PerphDevice() { BaseAddress = 0x3F43C000, EndAddress = 0x3F43_D000, Name = "RSA", FilterPrefix = "" });
+            DeviceMap.Add("21", Chapter21);
+
+            List<PerphDevice> Chapter22 = new List<PerphDevice>();
+            Chapter22.Add(new PerphDevice() { BaseAddress = 0x3F435000, EndAddress = 0x3F43_5120, Name = "RND", FilterPrefix = "" });
+            DeviceMap.Add("22", Chapter22);
+
+
+            // External memory encryption
+            List<PerphDevice> Chapter23 = new List<PerphDevice>();
+            Chapter23.Add(new PerphDevice() { BaseAddress = 0x3F43A000, EndAddress = 0x3F43_A200, Name = "XTS", FilterPrefix = "" });
+            DeviceMap.Add("23", Chapter23);
+
+            // Permission control
+            List<PerphDevice> Chapter24 = new List<PerphDevice>();
+            Chapter24.Add(new PerphDevice() { BaseAddress = 0x3F4C1000, EndAddress = 0x3F4C_2000, Name = "PMS", FilterPrefix = "" });     
+            DeviceMap.Add("24", Chapter24);
+
+            
+            List<PerphDevice> Chapter25 = new List<PerphDevice>();
+            Chapter25.Add(new PerphDevice() { BaseAddress = 0x3F43D000, EndAddress = 0x3F43_E000, Name = "DS", FilterPrefix = "" });     
+            DeviceMap.Add("25", Chapter25);
+
+            List<PerphDevice> Chapter26 = new List<PerphDevice>();
+            Chapter26.Add(new PerphDevice() { BaseAddress = 0x3F43E000, EndAddress = 0x3F43_E100, Name = "HMAC", FilterPrefix = "" });     
+            DeviceMap.Add("26", Chapter26);
+
+            List<PerphDevice> Chapter27 = new List<PerphDevice>();
+            Chapter26.Add(new PerphDevice() { BaseAddress = 0x3F408000, EndAddress = 0x3F40_8800, Name = "ULP", FilterPrefix = "" });     
+            DeviceMap.Add("27", Chapter27);
+
+            List<PerphDevice> Chapter28 = new List<PerphDevice>();
+            Chapter28.Add(new PerphDevice() { BaseAddress = 0x60008000, EndAddress = 0x6000_8200, Name = "RTC", FilterPrefix = "" });     
+            DeviceMap.Add("28", Chapter28);
+
+            List<PerphDevice> ChapterXX = new List<PerphDevice>();
+            ChapterXX.Add(new PerphDevice() { BaseAddress = 0x60080000, EndAddress = 0x6008_2000, Name = "USB", FilterPrefix = "" });     
+            DeviceMap.Add("USB", ChapterXX);
+
+
+
+/* Undocumented, future register */
+
+            {
+                                    PerphRegister newReg = new PerphRegister();
+
+                                    newReg.Name = "FIFO_USB_0";
+                                    newReg.Offset = CalcOffset("020", "", 0);
+                                    newReg.Iterator = "";
+                                    newReg.Index = 0;
+                                    newReg.Chapter = "USB";
+                                    /* set name and base offset etc */
+                                    AddRegToDevice(DeviceMap, newReg);
+
+            }
+
+
+            List<PerphDevice> ChapterBB = new List<PerphDevice>();
+            ChapterBB.Add(new PerphDevice() { BaseAddress = 0x60026000, EndAddress = 0x6002_6100, Name = "BB", FilterPrefix = "" });     
+            DeviceMap.Add("BB", ChapterBB);
+
+
+            List<PerphDevice> ChapterBB_PHY = new List<PerphDevice>();
+            ChapterBB_PHY.Add(new PerphDevice() { BaseAddress = 0x6001C000, EndAddress = 0x6001_C200, Name = "BBPHY", FilterPrefix = "" });     
+            DeviceMap.Add("BB_PHY", ChapterBB_PHY);
+
+            List<PerphDevice> ChapterMMU = new List<PerphDevice>();
+            ChapterBB_PHY.Add(new PerphDevice() { BaseAddress = 0x61801000, EndAddress = 0x6180_2000, Name = "MMU", FilterPrefix = "" });     
+            DeviceMap.Add("MMU", ChapterBB_PHY);
+
+
+
+
+            //DeviceMap.Add("29", Chapter18);
 
 
             HashSet<string> SeenRegs = new HashSet<string>();
@@ -347,11 +429,11 @@ namespace ESP32S2_SVD_GEN
                         SeenRegs.Add(regMatch.Groups[1].Value);
                     }
 
-                    Console.WriteLine("All-" + regMatch.Groups[0].Value + "-");
-                    Console.WriteLine("chapter-" + regMatch.Groups[1].Value + "-");
-                    Console.WriteLine("register-" + regMatch.Groups[2].Value + "-");
-                    Console.WriteLine("off-" + regMatch.Groups[3].Value + "-");
-                    Console.WriteLine("iter-" + regMatch.Groups[4].Value + "-");
+                    //Console.WriteLine("All-" + regMatch.Groups[0].Value + "-");
+                    //Console.WriteLine("chapter-" + regMatch.Groups[1].Value + "-");
+                    //Console.WriteLine("register-" + regMatch.Groups[2].Value + "-");
+                    //Console.WriteLine("off-" + regMatch.Groups[3].Value + "-");
+                    //Console.WriteLine("iter-" + regMatch.Groups[4].Value + "-");
 
 
                     PerphDevice d = null;
@@ -777,7 +859,7 @@ namespace ESP32S2_SVD_GEN
                 }
                 else
                 {
-                    if (reg.Chapter == "8")
+                    if (false /* reg.Chapter == "8"*/)
                     {
                     /*
 
