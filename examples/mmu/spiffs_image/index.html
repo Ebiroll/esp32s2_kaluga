@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MMU contents</title>
+       <link rel="stylesheet" type="text/css" href="http://w2ui.com/src/w2ui-1.5.rc1.min.css" />
+       <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+       <script type="text/javascript" src="http://w2ui.com/src/w2ui-1.5.rc1.min.js"></script>
+       <!-- If you are offline, use local w2ui and jquery
+        <script src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/w2ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/w2ui.min.css" />
+        -->
+    <meta charset="utf-8"  />
+</head>
+<body>
+
+<div id="layout" style="width: 100%; height: 350px; overflow: hidden;"></div>
+
+<script type="text/javascript">
+var config = {
+left_mmugrid: { 
+    name : 'mmu',
+    url  : '/api/mmu/',
+    //recid   : 'MEM',
+    show    : {
+        toolbar  : false,
+        toolbarAdd: false,
+        toolbarSave: false,
+        toolbarDelete: false,
+        footer   : true,
+        toolbarDelete	: true
+    },
+    style: 'border: 0px',
+    //sortData: [{ field: 'MEM', direction: 'asc' }],
+    columns: [
+        { field: 'MEM', caption: 'mem', size: '10%', sortable: true,  editable: { type: 'text' }},
+        { field: 'VAL', caption: 'val', size: '10%', sortable: true,  editable: { type: 'text' }},
+        { field: 'AVAL', caption: 'val', size:'10%', sortable: true,  editable: { type: 'text' }}
+    ],
+    records: [
+        { recid: 1, MEM: '0x10000', VAL: "0x100",AVAL: "0x100" },
+        { recid: 2, MEM: '0x10004', VAL: "0x2", AVAL: "0x100"},
+        { recid: 3, MEM: '0x10008', VAL: "0x100",AVAL: "0x100"},
+        { recid: 4, MEM: '0x1000c', VAL: "0x4",AVAL: "0x100"},
+    ],
+    onSave: function (event) {
+        event.onComplete = function() {
+        w2ui.top_usergrid.reload();
+        // New users needs new "Users at location" list
+        // w2ui.form.refresh();
+        }
+    },
+    onClick: function (event) {
+        event.onComplete = function () {
+            var sel = this.getSelection();
+            if (sel.length == 1) {
+                console.log(sel[0]);
+                var ix=Number(sel[0])-1;
+                var mmu = w2ui.mmu;
+                var rec=mmu.records[ix];
+                // Set url for memory and flash
+                if (!(rec.VAL=="0x100")) {
+                   w2ui.mem.url = '/api/mem/' + ix
+                   w2ui.mem.reload();
+                   w2ui.flash.url = '/api/flash/' + rec.VAL
+                   w2ui.flash.reload();
+                   console.log(mmu.get(ix+1));
+                }
+                console.log(w2ui.mem.url);
+            }
+            console.log('selection:', ix);
+        }
+    } 
+},
+main_memgrid: {
+    name: 'mem',
+    //url  : '/api/mem',
+    style: 'border: 0px',
+    show    : {
+       toolbar  : false,
+    },
+    //sortData: [{ field: 'MEM', direction: 'asc' }],
+    columns: [
+        { field: 'MEM', caption: 'mem', size: '20%', sortable: true, editable: { type: 'text' } },
+        { field: 'VAL', caption: 'val', size: '20%', sortable: true, editable: { type: 'text' } }
+    ],
+    records: [
+        { recid: 1, MEM: '0x10000', VAL: "0x100" },
+        { recid: 2, MEM: '0x10004', VAL: "0x100" },
+        { recid: 3, MEM: '0x10008', VAL: "0x100" },
+        { recid: 4, MEM: '0x1000c', VAL: "0x100" },
+    ]
+},
+right_flashgrid: {
+    name: 'flash',
+    //url  : '/api/flash',
+    show    : {
+      toolbar  : false,
+    },
+    style: 'border: 0px',
+    //sortData: [{ field: 'MEM', direction: 'asc' }],
+    columns: [
+        { field: 'MEM', caption: 'mem', size: '20%', sortable: true, editable: { type: 'text' } },
+        { field: 'VAL', caption: 'val', size: '20%', sortable: true, editable: { type: 'text' } }
+    ],
+    records: [
+        { recid: 1, MEM: '0x10000', VAL: "0x100" },
+        { recid: 2, MEM: '0x10004', VAL: "0x100" },
+        { recid: 3, MEM: '0x10008', VAL: "0x100" },
+        { recid: 4, MEM: '0x1000c', VAL: "0x100" },
+    ]
+}
+
+}
+
+
+$(function () {
+    var pstyle = 'border: 1px solid #dfdfdf; padding: 5px;';
+    $('#layout').w2layout({
+        name: 'layout',
+        panels: [
+            { type: 'left', size: 300, resizable: true, style: pstyle, content: 'left' },
+            { type: 'main', size: '40%', resizable: true, style: pstyle, content: 'main' },
+            { type: 'right',size: '40%', resizable: true, style: pstyle, content: 'right_flashgrid' }
+        ]
+    });
+    //w2ui['grid'].load('data/list.json');
+    w2ui.layout.content('left',$().w2grid(config.left_mmugrid));
+    w2ui.layout.content('main',$().w2grid(config.main_memgrid));
+    w2ui.layout.content('right',$().w2grid(config.right_flashgrid));
+
+});
+</script>
+
+</body>
+</html>
