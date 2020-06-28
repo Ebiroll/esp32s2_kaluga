@@ -14,18 +14,22 @@
 #include "esp_spi_flash.h"
 #include "my_type.h"
 
+void one_ptr_arg(my_type *t){
+  t->my_int=t->my_int+10;
+}
 
 int one_arg(int my_arg){
-	char buffer[8];
+    char buffer[8];
     int i;
-	my_type silly;
+    my_type silly;
     silly.my_int=4;
 
     for (i = 0; i < my_arg; ++i) {
         buffer[i]=0x32;
     }
+    one_ptr_arg(&silly);
+    printf("My_arg=%d,%s",my_arg,buffer);
 
-	printf("My_arg=%d,%s",my_arg,buffer);
     printf("silly.my_int=%d\n",silly.my_int);
     return (silly.my_int);
 }
@@ -50,6 +54,17 @@ void two_args(int my_arg,my_type *t)
     ret=three_args(my_local,2,3);
     printf("ret=%d\n",ret);
 
+}
+
+int two_args_one_ret(int my_arg,int my_arg2)
+{
+    int my_local = my_arg + 2;
+    int i;
+    int ret=0;
+    for (i = 0; i < my_local; ++i) {
+      ret+=i;
+    }
+    return ret;
 }
 
 
@@ -80,7 +95,9 @@ void app_main(void)
 
     two_args(2,&test);
 
-    printf("Restarting now.\n");
+    int ret=two_args_one_ret(2,3);
+    
+    printf("Restarting now. %d\n",ret);
     fflush(stdout);
     esp_restart();
 }
