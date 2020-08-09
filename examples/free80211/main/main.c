@@ -10,7 +10,37 @@
 
 #include "esp_attr.h"
 
-IRAM_ATTR char my_wifi_80211_tx[0x1200];
+IRAM_ATTR unsigned char my_wifi_80211_tx[]=
+{
+  0x36,
+  0x41,
+  0x00,
+  0x50,
+  0x50,
+  0x74,
+  0x40,
+  0xc4,
+  0x20,
+  0x50,
+  0xd5,
+  0x20,
+  0xbd,
+  0x03,
+  0x20,
+  0xa2,
+  0x20,
+	// j=17
+  0x0c,
+  0x0a,
+  0xe2,
+  0xce,
+  0x14,
+  0xa0,
+  0x0e,
+  0x00
+};
+
+
 /*
  * This is the (currently unofficial) 802.11 raw frame TX API,
  * defined in esp32-wifi-lib's libnet80211.a/ieee80211_output.o
@@ -158,7 +188,7 @@ void app_main(void) {
 #if 0
 	__asm__ volatile (
 		"movi a10,0\n\t"
-		"addmi a14,a14,20\n\t"
+		"addmi a14,a14,0x14\n\t"
 		"jx  a14\n\t");
 #endif
 
