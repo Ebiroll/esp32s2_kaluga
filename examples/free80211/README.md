@@ -1,6 +1,9 @@
 # `esp_wifi_80211_tx` sample code
 <img src="rickroll.png" alt="Rickrolling with WiFi Networks" width="400px"/>
 
+# Origin
+https://github.com/Jeija/esp32-80211-tx
+
 ## Introduction
 Sending arbitrary IEEE 802.11 frames can be useful in various ways, e.g. for mesh networking, [unidirectional long-distance communication](https://www.youtube.com/watch?v=tBfa4yk5TdU) or low-overhead data transmission. It can, however, be abused for spamming large numbers of invalid SSIDs, jamming WiFi networks or sending deauthentication frames in order to sniff SSIDs of hidden wireless networks. Please be advised that such usage is morally doubtful at best and illegal at worst. Use this at your own risk.
 
@@ -16,6 +19,72 @@ If you want to use raw packet sending functionality in your own project, just de
 // en_sys_seq: see https://github.com/espressif/esp-idf/blob/master/docs/api-guides/wifi.rst#wi-fi-80211-packet-send for details
 esp_err_t esp_wifi_80211_tx(wifi_interface_t ifx, const void *buffer, int len, bool en_sys_seq);
 ```
+
+# 802.11 Frame header
+
+
+MAC layer provides functionality for several tasks like control medium access, can also offer support for roaming, authentication, and power conservation. The basic services provided by MAC are the mandatory asynchronous data service and an optional time-bounded service.
+IEEE 802.11 defines two MAC sub-layers 
+
+    Distributed Coordination Function (DCF) –
+    DCF uses CSMA/CA as access method as wireless LAN can’t implement CSMA/CD. It only offers asynchronous service.
+    Point Coordination Function (PCF) –
+    PCP is implemented on top of DCF and mostly used for time-service transmission. It uses a centralized, contention-free polling access method. It offers both asynchronous and time-bounded service.
+
+MAC Frame:
+The MAC layer frame consist of 9 fields. The following figure shows the basic structure of an IEEE 802.11 MAC data frame along with the content of the frame control field.
+
+<img src="802_11.png" alt="Frame Header" width="400px"/>
+
+    Frame Control(FC) –
+    It is 2 bytes long field which defines type of frame and some control information. Various fields present in FC are:
+
+### Version
+        It is a 2 bit long field which indicates the current protocol version which is fixed to be 0 for now.
+        Type:
+        It is a 2 bit long field which determines the function of frame i.e management(00), control(01) or data(10). The value 11 is reserved.
+### Subtype
+        It is a 4 bit long field which indicates sub-type of the frame like 0000 for association request, 1000 for beacon.
+### To DS
+        It is a 1 bit long field which when set indicates that destination frame is for DS(distribution system).
+### From DS
+        It is a 1 bit long field which when set indicates frame coming from DS.
+### More frag (More fragments)
+        It is 1 bit long field which when set to 1 means frame is followed by other fragments.
+### Retry
+        It is 1 bit long field, if the current frame is a retransmission of an earlier frame, this bit is set to 1.
+###  Power Mgmt (Power management)
+        It is 1 bit long field which indicates the mode of a station after successful transmission of a frame. Set to 1 the field indicates that the station goes into power-save mode. If the field is set to 0, the station stays active.
+### More data
+        It is 1 bit long field which is used to indicates a receiver that a sender has more data to send than the current frame. This can be used by an access point to indicate to a station in power-save mode that more packets are buffered or it can be used by a station to indicate to an access point after being polled that more polling is necessary as the station has more data ready to transmit.
+### WEP
+        It is 1 bit long field which indicates that the standard security mechanism of 802.11 is applied.
+### Order
+        It is 1 bit long field, if this bit is set to 1 the received frames must be processed in strict order.
+
+
+
+
+### Duration/ID 
+    It is 4 bytes long field which contains the value indicating the period of time in which the medium is occupied(in µs).
+
+
+###   Address 1 to 4 
+    These are 6 bytes long fields which contain standard IEEE 802 MAC addresses (48 bit each). The meaning of each address depends on the DS bits in the frame control field.
+
+
+### SC (Sequence control) 
+    It is 16 bits long field which consists of 2 sub-fields, i.e., Sequence number (12 bits) and Fragment number (4 bits). Since acknowledgement mechanism frames may be duplicated hence, a sequence number is used to filter duplicate frames.
+
+
+### Data 
+    It is a variable length field which contain information specific to individual frames which is transferred transparently from a sender to the receiver(s).
+
+
+### CRC (Cyclic redundancy check) 
+    It is 4 bytes long field which contains a 32 bit CRC error detection sequence to ensure error free frame.
+
+
 
 ### Compile / Flash
 This project uses the [Espressif IoT Development Framework](https://github.com/espressif/esp-idf). With the ESP-IDF installed, execute
