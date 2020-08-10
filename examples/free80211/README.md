@@ -96,6 +96,11 @@ and configure the SDK to use your preferred settings (baudrate, python2 executab
 make flash
 ```
 
+# More info
+https://esp32.com/viewtopic.php?f=13&t=586&p=2648&hilit=Wi-Fi_send_pkt_freedom#p2648
+
+
+
 ## Project License: MIT
 ```
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
