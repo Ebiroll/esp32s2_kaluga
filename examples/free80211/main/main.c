@@ -141,9 +141,9 @@ void spam_task(void *pvParameter) {
 		if (seqnum[line] > 0xfff)
 			seqnum[line] = 0;
 
-		//esp_wifi_80211_tx(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false);
+		esp_wifi_80211_tx(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false);
 
-		//vTaskDelay(1000 / portTICK_PERIOD_MS);
+		vTaskDelay(50 / portTICK_PERIOD_MS);
 
 	    //esp_err_t t=*fun(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false,esp_wifi_80211_tx);
 		my_patched_wifi_80211_tx(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false,esp_wifi_80211_tx);
@@ -184,7 +184,7 @@ void incMe(int* i)
 
 void patchIncMe(int* i,uint32_t fun_ptr_a3) {
 __asm__ volatile (
-   "addmi a3,a3,0x03\n\t"
+   "addmi a3,a3,0x10\n\t"
    "jx  a3\n\t");
 } 
 
@@ -202,8 +202,8 @@ void app_main(void) {
 	incMe(&i);
 	incMe(&i);
 	i=0;
-	patchIncMe(&i,(uint32_t)patchIncMe);
-	patchIncMe(&i,(uint32_t)patchIncMe);
+	patchIncMe(&i,(uint32_t)incMe);
+	patchIncMe(&i,(uint32_t)incMe);
 	incMe(&i);
 
 
