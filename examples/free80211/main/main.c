@@ -15,14 +15,14 @@ void IRAM_ATTR my_patched_wifi_80211_tx(wifi_interface_t ifx, const void *buffer
 {
 __asm__ volatile (
    "extui      a5,a5,0x0,0x8\n\t"
-   "mov        a12,a4\n\t"
    "mov        a13,a5\n\t"
-   "mov.n      a11,a3\n\t"
+   "mov        a12,a4\n\t"
+   "mov        a11,a3\n\t"
    "mov        a10,a2\n\t"
    "movi.n     a10,0x0\n\t"
    "movi a10,0\n\t"
-   "addmi a14,a14,0x14\n\t"
-   "jx  a14\n\t");
+   "addmi a6,a6,0x14\n\t"
+   "jx  a6\n\t");
 }
 
 
@@ -162,10 +162,50 @@ static inline uint32_t _getCycleCount(void) {
   return ccount;
 }
 
+
+
+static inline uint32_t getSP(void) {
+  uint32_t sp;
+  __asm__ __volatile__("mov %0,a1":"=a" (sp));
+  return sp;
+}
+
+void incMe(int* i) 
+{
+	uint32_t sp;
+	(*i)++;
+	printf("i after one inc %d\n",*i);
+	(*i)++;
+	printf("i after second inc %d\n",*i);
+	sp=getSP();
+	printf("stack_p %x\n",sp);
+
+}
+
+void patchIncMe(int* i,uint32_t fun_ptr_a3) {
+__asm__ volatile (
+   "addmi a2,a2,0x03\n\t"
+   "jx  a2\n\t");
+} 
+
+
+
+
 void app_main(void) {
 	uint32_t addr;
+	int i=0;
 	// only works in qemu
 	//memcpy((char *)my_wifi_80211_tx,(char *)esp_wifi_80211_tx,0x1200);
+
+	addr=getSP();
+	printf("stack_main %x\n",addr);
+	incMe(&i);
+	incMe(&i);
+	i=0;
+	patchIncMe(&i,(uint32_t)patchIncMe);
+	patchIncMe(&i,(uint32_t)patchIncMe);
+	incMe(&i);
+
 
 	addr=(uint32_t) &my_wifi_80211_tx[0];
 
