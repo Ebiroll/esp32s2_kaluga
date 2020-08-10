@@ -10,6 +10,22 @@
 
 #include "esp_attr.h"
 
+
+void IRAM_ATTR my_patched_wifi_80211_tx(wifi_interface_t ifx, const void *buffer, int len, bool en_sys_seq,uint32_t original_fun)
+{
+__asm__ volatile (
+   "extui      a5,a5,0x0,0x8\n\t"
+   "mov        a12,a4\n\t"
+   "mov        a13,a5\n\t"
+   "mov.n      a11,a3\n\t"
+   "mov        a10,a2\n\t"
+   "movi.n     a10,0x0\n\t"
+   "movi a10,0\n\t"
+   "addmi a14,a14,0x14\n\t"
+   "jx  a14\n\t");
+}
+
+
 IRAM_ATTR unsigned char my_wifi_80211_tx[]=
 {
   0x36,
@@ -125,11 +141,12 @@ void spam_task(void *pvParameter) {
 		if (seqnum[line] > 0xfff)
 			seqnum[line] = 0;
 
-		esp_wifi_80211_tx(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false);
+		//esp_wifi_80211_tx(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false);
 
 		//vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 	    //esp_err_t t=*fun(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false,esp_wifi_80211_tx);
+		my_patched_wifi_80211_tx(WIFI_IF_AP, beacon_rick, sizeof(beacon_raw) + strlen(rick_ssids[line]), false,esp_wifi_80211_tx);
 		//printf("%d",t);
 		
 		//vTaskDelay(2000 / portTICK_PERIOD_MS);
