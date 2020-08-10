@@ -184,8 +184,8 @@ void incMe(int* i)
 
 void patchIncMe(int* i,uint32_t fun_ptr_a3) {
 __asm__ volatile (
-   "addmi a2,a2,0x03\n\t"
-   "jx  a2\n\t");
+   "addmi a3,a3,0x03\n\t"
+   "jx  a3\n\t");
 } 
 
 
