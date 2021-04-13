@@ -53,7 +53,7 @@ bool RFM69OOK::initialize()
   };
 
   pinMode(_slaveSelectPin, OUTPUT);
-  SPI.begin();
+  SPI.begin(VSPI_SCLK, VSPI_MISO, VSPI_MOSI, VSPI_SS); //SCLK, MISO, MOSI, SS
 
   for (byte i = 0; CONFIG[i][0] != 255; i++)
     writeReg(CONFIG[i][0], CONFIG[i][1]);
@@ -154,7 +154,8 @@ void RFM69OOK::setBitrate(uint32_t bitrate)
 // set OOK bandwidth
 void RFM69OOK::setBandwidth(uint8_t bw)
 {
-  writeReg(REG_RXBW, readReg(REG_RXBW) & 0xE0 | bw);
+  byte tmp=  readReg(REG_RXBW);
+  writeReg(REG_RXBW,(tmp & 0xE0) | bw);
 }
 
 // set RSSI threshold
@@ -252,8 +253,8 @@ void RFM69OOK::writeReg(byte addr, byte value)
 void RFM69OOK::select() {
   noInterrupts();
   // save current SPI settings
-  _SPCR = SPCR;
-  _SPSR = SPSR;
+  //_SPCR = SPCR;
+  //_SPSR = SPSR;
   // set RFM69 SPI settings
   SPI.setDataMode(SPI_MODE0);
   SPI.setBitOrder(MSBFIRST);
@@ -265,8 +266,8 @@ void RFM69OOK::select() {
 void RFM69OOK::unselect() {
   digitalWrite(_slaveSelectPin, HIGH);
   // restore SPI settings to what they were before talking to RFM69
-  SPCR = _SPCR;
-  SPSR = _SPSR;
+  //SPCR = _SPCR;
+  //SPSR = _SPSR;
   interrupts();
 }
 

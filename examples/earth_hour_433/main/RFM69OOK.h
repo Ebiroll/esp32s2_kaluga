@@ -32,7 +32,11 @@
 #define RFM69OOK_h
 #include <Arduino.h>            //assumes Arduino IDE v1.0 or greater
 
+#if defined(ESP32S2)
+#define RF69OOK_SPI_CS             26
+#else
 #define RF69OOK_SPI_CS  SS // SS is the SPI slave select pin, for instance D10 on atmega328
+#endif
 
 // INT0 on AVRs should be connected to RFM69's DIO0 (ex on Atmega328 it's D2, on Atmega644/1284 it's D2)
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega88) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega88__)
@@ -45,6 +49,28 @@
   #define RF69OOK_IRQ_PIN          3
   #define RF69OOK_IRQ_NUM          0
 #endif
+
+#define RF69OOK_IRQ_PIN          38
+#define RF69OOK_IRQ_NUM          3
+
+#if CONFIG_IDF_TARGET_ESP32S2
+#define VSPI FSPI
+#endif
+
+#define VSPI_MISO   35
+#define VSPI_MOSI   36
+#define VSPI_SCLK   34
+#define VSPI_SS     26
+
+// esp32s2 original
+//static const uint8_t SS    = 34;
+//static const uint8_t MOSI  = 35;
+//static const uint8_t MISO  = 37;
+//static const uint8_t SCK   = 36;
+
+
+
+#define RF69OOK_RST 39
 
 #define RF69OOK_MODE_SLEEP       0 // XTAL OFF
 #define RF69OOK_MODE_STANDBY     1 // XTAL ON

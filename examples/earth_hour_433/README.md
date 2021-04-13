@@ -23,5 +23,22 @@ To make things easier, use Arduino as a component
     git clone https://github.com/espressif/arduino-esp32.git arduino && \
     cd arduino && \
     git submodule update --init --recursive && \
-    cd ../.. && \
-    make menuconfig
+    cd ../.. 
+
+
+    idf.py set-target esp32s2
+    idf.py menuconfig
+
+
+# However for the esp32s2 I had to add this in menuconfig
+
+    error: #error "Please configure IDF framework to include mbedTLS -> Enable pre-shared-key ciphersuites and activate at least one cipher"
+ #  error "Please configure IDF framework to include mbedTLS -> Enable pre-shared-key ciphersuites and activate at least one cipher"
+    
+       Choose SSL/TLS library for ESP-TLS (See help for more Info) (mbedTLS)  --->
+[*] Use Digital Signature (DS) Peripheral with ESP-TLS
+[ ] Enable ESP-TLS Server
+[*] Enable PSK verification
+[ ] Allow potentially insecure options
+
+
